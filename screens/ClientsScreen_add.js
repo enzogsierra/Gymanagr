@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import {View, Text, TextInput, Pressable, ToastAndroid, TouchableOpacity} from "react-native";
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../dbConfig";
-import ModalSelector from "react-native-modal-selector";
 import { ScrollView } from "react-native-gesture-handler";
 import { styles } from "../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";

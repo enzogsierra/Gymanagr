@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Settings } from "../settings";
 
 
-export default function HomeScreen()
+export default function StatsScreen()
 {
     const [julianDay, setJulianDay] = useState();
     const [inactiveAfterDays, setInactiveAfterDays] = useState(0); // settings.js
@@ -136,36 +136,36 @@ export default function HomeScreen()
     return (
         <View style={styles.container}>
             <ScrollView>
-                <Text style={styles.home_headerText}>Clientes</Text>
-                <View style={styles.home_card}>
+                <Text style={styles.stats_headerText}>Clientes</Text>
+                <View style={styles.stats_card}>
                     { payments &&
-                        <View style={styles.home_clientsCard}>
-                            <View style={styles.home_clientsCard_container}>
-                                <Text style={styles.home_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate <= 0) ? 1 : 0), 0)}</Text>
-                                <Text style={styles.home_clientsCard_header}>Activos</Text>
+                        <View style={styles.stats_clientsCard}>
+                            <View style={styles.stats_clientsCard_container}>
+                                <Text style={styles.stats_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate <= 0) ? 1 : 0), 0)}</Text>
+                                <Text style={styles.stats_clientsCard_header}>Activos</Text>
                             </View>
 
-                            <View style={styles.home_clientsCard_container}>
-                                <Text style={styles.home_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate > 0 && julianDay - b.nextPayDate <= inactiveAfterDays) ? 1 : 0), 0)}</Text>
-                                <Text style={styles.home_clientsCard_header}>Pendientes</Text>
+                            <View style={styles.stats_clientsCard_container}>
+                                <Text style={styles.stats_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate > 0 && julianDay - b.nextPayDate <= inactiveAfterDays) ? 1 : 0), 0)}</Text>
+                                <Text style={styles.stats_clientsCard_header}>Pendientes</Text>
                             </View>
 
-                            <View style={styles.home_clientsCard_container}>
-                                <Text style={styles.home_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate > inactiveAfterDays) ? 1 : 0), 0)}</Text>
-                                <Text style={styles.home_clientsCard_header}>Inactivos</Text>
+                            <View style={styles.stats_clientsCard_container}>
+                                <Text style={styles.stats_clientsCard_text}>{clients.reduce((a, b) => a + ((julianDay - b.nextPayDate > inactiveAfterDays) ? 1 : 0), 0)}</Text>
+                                <Text style={styles.stats_clientsCard_header}>Inactivos</Text>
                             </View>
 
-                            <View style={styles.home_clientsCard_container}>
-                                <Text style={styles.home_clientsCard_text}>{clients.length}</Text>
-                                <Text style={styles.home_clientsCard_header}>Total</Text>
+                            <View style={styles.stats_clientsCard_container}>
+                                <Text style={styles.stats_clientsCard_text}>{clients.length}</Text>
+                                <Text style={styles.stats_clientsCard_header}>Total</Text>
                             </View>
                         </View>
                     }
                 </View>
 
 
-                <Text style={styles.home_headerText}>Resumen</Text>
-                <View style={styles.home_card}>
+                <Text style={styles.stats_headerText}>Resumen</Text>
+                <View style={styles.stats_card}>
                     <Pressable style={styles.inputGroup} onPress={() => setShowMonthsModal(true)}>
                         <Ionicons style={styles.formLabel} name="calendar"/>
 
@@ -192,15 +192,15 @@ export default function HomeScreen()
                     </Pressable>
 
                     { payments &&
-                        <View style={styles.home_cardResumes}>
-                            <View style={styles.home_cardResume}>
-                                <Text style={styles.home_cardResume_header}>Pagos</Text>
-                                <Text style={styles.home_cardResume_text}>{payments.length}</Text>
+                        <View style={styles.stats_cardResumes}>
+                            <View style={styles.stats_cardResume}>
+                                <Text style={styles.stats_cardResume_header}>Pagos</Text>
+                                <Text style={styles.stats_cardResume_text}>{payments.length}</Text>
                             </View>
 
-                            <View style={styles.home_cardResume}>
-                                <Text style={styles.home_cardResume_header}>Ingresos</Text>
-                                <Text style={styles.home_cardResume_text}>$ {formatCurrency(payments.reduce((a, b) => a + b.price, 0))}</Text>
+                            <View style={styles.stats_cardResume}>
+                                <Text style={styles.stats_cardResume_header}>Ingresos</Text>
+                                <Text style={styles.stats_cardResume_text}>$ {formatCurrency(payments.reduce((a, b) => a + b.price, 0))}</Text>
                             </View>
                         </View>
                     }
@@ -208,7 +208,7 @@ export default function HomeScreen()
                     <View style={{marginVertical: 16, borderTopWidth: 1, borderTopColor: "#555"}}></View>
 
                     <Text style={{marginBottom: 8, fontSize: 16, color: "#ccc"}}>Historial de pagos</Text>
-                    <View style={styles.home_cardResume_paymentsWrapper}>
+                    <View style={styles.stats_cardResume_paymentsWrapper}>
                         {(payments && !payments.length) &&
                             <Text style={{flex: 1, textAlign: "center", color: "#ccc"}}>No se encontraron pagos. Intenta con otros términos.</Text>
                         }
@@ -216,10 +216,10 @@ export default function HomeScreen()
                         {payments && payments.map((payment, index) =>
                         {
                             return (
-                                <View key={payment.id} style={[styles.home_cardResume_payment, (index == 0) ? {marginTop: 0, paddingTop: 0, borderTopWidth: 0} : {}]}>
-                                    <Text style={[styles.home_cardResume_paymentText, {color: colors.primary, fontWeight: "bold"}]}>{formatSqliteDate(payment.date)}</Text>
-                                    <Text style={[styles.home_cardResume_paymentText, {flex: 1}]}>{payment.clientName ?? "(Sin cliente)"}</Text>
-                                    <Text style={[styles.home_cardResume_paymentText, {marginEnd: 0}]}>$ {formatCurrency(payment.price)}</Text>
+                                <View key={payment.id} style={[styles.stats_cardResume_payment, (index == 0) ? {marginTop: 0, paddingTop: 0, borderTopWidth: 0} : {}]}>
+                                    <Text style={[styles.stats_cardResume_paymentText, {color: colors.primary, fontWeight: "bold"}]}>{formatSqliteDate(payment.date)}</Text>
+                                    <Text style={[styles.stats_cardResume_paymentText, {flex: 1}]}>{payment.clientName ?? "(Sin cliente)"}</Text>
+                                    <Text style={[styles.stats_cardResume_paymentText, {marginEnd: 0}]}>$ {formatCurrency(payment.price)}</Text>
                                 </View>
                             );
                         })}

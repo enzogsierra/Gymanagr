@@ -16,12 +16,63 @@ export const styles = StyleSheet.create(
     container:
     {
         flex: 1, 
-        paddingTop: 8, 
+        paddingTop: 16, 
         paddingBottom: 0, 
         paddingHorizontal: 16,
         backgroundColor: colors.background,
     },
 
+
+    // Pantalla first launch
+    firstLaunch_container:
+    {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    firstLaunch_h1:
+    {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "white",
+    },
+    firstLaunch_text:
+    {
+        fontSize: 16,
+        textAlign: "center",
+        color: "white",
+    },
+    firstLaunch_priceInputContainer:
+    {
+        marginTop: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: colors.primary,
+        borderRadius: 8,
+    },
+    firstLaunch_priceInput:
+    {
+        paddingBottom: 1,
+        fontSize: 24,
+        color: "white",
+    },
+    firstLaunch_startContainer:
+    {
+        marginTop: 16,
+        padding: 8,
+        backgroundColor: colors.primary,
+        borderRadius: 4,
+    },
+    firstLaunch_startText:
+    {
+        fontSize: 24,
+        color: "white",
+        letterSpacing: 1,
+        textTransform: "uppercase",
+    },
 
     // Barra de busqueda
     searchBarContainer:
@@ -302,7 +353,7 @@ export const styles = StyleSheet.create(
 
     
     // Inicio
-    home_card:
+    stats_card:
     {
         marginBottom: 16,
         padding: 16,
@@ -311,7 +362,7 @@ export const styles = StyleSheet.create(
         borderWidth: 1,
         borderColor: "#555",
     },
-    home_headerText:
+    stats_headerText:
     {
         textTransform: "uppercase",
         textAlign: "left",
@@ -320,22 +371,22 @@ export const styles = StyleSheet.create(
         letterSpacing: 1, 
         color: "white",
     },
-    home_clientsCard:
+    stats_clientsCard:
     {
         flexDirection: "row",
         justifyContent: "center",
     }, 
-    home_clientsCard_container:
+    stats_clientsCard_container:
     {
         marginHorizontal: 12,
         alignItems: "center",
     },
-    home_clientsCard_header:
+    stats_clientsCard_header:
     {
         textTransform: "uppercase",
         color: "white",
     },
-    home_clientsCard_text:
+    stats_clientsCard_text:
     {
         fontSize: 24,
         letterSpacing: 1,
@@ -343,18 +394,18 @@ export const styles = StyleSheet.create(
         color: "orange",
     },
 
-    home_cardResumes:
+    stats_cardResumes:
     {
         marginTop: 8,
         flexDirection: "row",
         justifyContent: "space-evenly",
     },
-    home_cardResume:
+    stats_cardResume:
     {
         flex: 1,
         alignItems: "center",
     },
-    home_cardResume_header:
+    stats_cardResume_header:
     {
         paddingBottom: 4,
         fontSize: 16,
@@ -366,20 +417,20 @@ export const styles = StyleSheet.create(
         borderBottomColor: "#555",
         borderBottomWidth: 1,
     },
-    home_cardResume_text:
+    stats_cardResume_text:
     {
         fontSize: 24,
         fontWeight: "500",
         color: "white",
     },
 
-    home_cardResume_paymentsWrapper:
+    stats_cardResume_paymentsWrapper:
     {
         padding: 8,
         backgroundColor: "#444",
         borderRadius: 4,
     },
-    home_cardResume_payment:
+    stats_cardResume_payment:
     {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -388,7 +439,7 @@ export const styles = StyleSheet.create(
         borderTopColor: "#555",
         borderTopWidth: 1,
     },
-    home_cardResume_paymentText:
+    stats_cardResume_paymentText:
     {
         marginEnd: 8,
         color: "white",

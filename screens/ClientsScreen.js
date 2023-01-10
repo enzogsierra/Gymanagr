@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {View, Text, ScrollView, TextInput, Modal, Pressable, ToastAndroid, TouchableOpacity} from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import {FontAwesome, Ionicons} from '@expo/vector-icons'; 
+import {FontAwesome, Ionicons} from '@expo/vector-icons';
 
-import Client from "../components/Client"; 
+import Client from "../components/Client";
 import {db} from "../dbConfig"; // Importar la db
 import ModalSelector from "react-native-modal-selector";
 import { colors, styles } from "../utils";
@@ -16,10 +16,9 @@ export default function ClientsScreen()
     const navigation = useNavigation();
 
     const [searchFilters, setSearchFilters] = useState({}); // Almacena los filtros de búsqueda de clientes
-    
-    const [filterModalVisible, setFilterModalVisible] = useState(false); // Establece si se muestra o no el modal de filtros
+
     const [showStatusList, setShowStatusList] = useState(false); // ^
-    
+
     const [clients, setClients] = useState([]); // Almacena todos los clientes - inmutable
     const [clientsList, setClientsList] = useState([]); // Almacena la lista de clientes (puede cambiar al cambiar los filtros de busqueda)
     const [statusList, setStatusList] = useState([]); // Almacena los estados de cuenta
@@ -37,26 +36,26 @@ export default function ClientsScreen()
 
 
     // Cuando la pantalla esté en foco
-    useFocusEffect(React.useCallback(() => 
+    useFocusEffect(React.useCallback(() =>
     {
         // Cargar configuraciones
         loadSettings();
 
         // Otener "julianday" actual (hoy)
-        db.transaction(tx => 
+        db.transaction(tx =>
         {
-            tx.executeSql("SELECT JULIANDAY(DATE('NOW')) AS julianday", [], (_, res) => 
+            tx.executeSql("SELECT JULIANDAY(DATE('NOW')) AS julianday", [], (_, res) =>
             {
                 setJulianDay(res.rows._array[0].julianday);
             });
         });
 
         // Obtener clientes
-        db.transaction(tx => 
+        db.transaction(tx =>
         {
             const query =
             `
-                SELECT 
+                SELECT
                     clients.id,
                     clients.name,
                     clients.nextPayDate,
@@ -64,7 +63,7 @@ export default function ClientsScreen()
                 FROM clients
                 ORDER BY clients.name ASC
             `;
-            tx.executeSql(query, [], (_, res) => 
+            tx.executeSql(query, [], (_, res) =>
             {
                 setClients(res.rows._array); // Almacenar todos los clientes
             });
@@ -89,12 +88,12 @@ export default function ClientsScreen()
 
         if(name) // El filtrado por nombre no toma en cuenta los demas filtros (filtra entre todos los clientes)
         {
-            list = list.filter(client => 
-            { 
-                return client.name.toLowerCase().indexOf(name.trim().toLowerCase()) > -1; // Si el nombre del cliente coincide con la busqueda, añadirlo a la nueva lista  
+            list = list.filter(client =>
+            {
+                return client.name.toLowerCase().indexOf(name.trim().toLowerCase()) > -1; // Si el nombre del cliente coincide con la busqueda, añadirlo a la nueva lista
             });
         }
-        else // Filtrar 
+        else // Filtrar
         {
             switch(status) // Filtrar por estado de cuenta
             {
@@ -135,14 +134,14 @@ export default function ClientsScreen()
             <View style={styles.searchBarContainer}>
                 <View style={styles.searchBar}>
                     <FontAwesome name="search" style={styles.searchBar_Icon} />
-                
-                    <TextInput 
+
+                    <TextInput
                         style={styles.searchBar_Input}
-                        placeholder="Buscar cliente" 
-                        onChangeText={(name) => setSearchFilters({...searchFilters, name: name})} 
+                        placeholder="Buscar cliente"
+                        onChangeText={(name) => setSearchFilters({...searchFilters, name: name})}
                         value={searchFilters.name}
                         placeholderTextColor="#888"
-                    />     
+                    />
                 </View>
 
                 <TouchableOpacity style={styles.searchFilter_btn} onPress={() => setShowStatusList(true)}>
@@ -153,7 +152,7 @@ export default function ClientsScreen()
                     data={statusList}
                     selectedKey={searchFilters.status}
                     visible={showStatusList}
-                    header={<Text style={styles.ModalSelector_headerStyle}>Seleccionar estado de cuota</Text>}
+                    header={<Text style={styles.ModalSelector_headerStyle}>Mostrar clientes</Text>}
                     cancelText="Cancelar"
 
                     selectStyle={{display: "none", borderWidth: 0}}
@@ -167,20 +166,14 @@ export default function ClientsScreen()
                 />
             </View>
 
-            {(searchFilters && (searchFilters.name != "" || searchFilters.status != 0)) && 
+            {(searchFilters && (searchFilters.name != "" || searchFilters.status != 0)) &&
                 <Text style={styles.searchBar_filterText}>{clientsList.length} {(clientsList.length == 1) ? ("cliente filtrado") : ("clientes filtrados")}</Text>
             }
-            
-            {!clients.length ?
-                <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                    <Text style={{fontSize: 16, color: "white"}}>Añade clientes para empezar</Text>
 
-                    <TouchableOpacity onPress={() => navigation.navigate("Añadir cliente")} style={{marginTop: 8, padding: 8, backgroundColor: colors.primary, borderRadius: 8}}>
-                        <View style={{flexDirection: "row", alignItems: "center"}}>
-                            <Ionicons name="person-add-sharp" style={{marginEnd: 4, fontSize: 16, color: "white"}}/>
-                            <Text style={{color: "white", fontSize: 16}}>Nuevo cliente</Text>
-                        </View>
-                    </TouchableOpacity>
+            {!clients.length ?
+                <View style={{flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    <Text style={{fontSize: 16, color: colors.muted}}>Añade clientes presionando en </Text>
+                    <Ionicons name="person-add-sharp" style={{fontSize: 16, color: "white", backgroundColor: colors.primary, padding: 4, borderRadius: 50}}/>
                 </View>
             :
                 <ScrollView style={{marginTop: 16}}>
@@ -188,7 +181,7 @@ export default function ClientsScreen()
                     // Mostrar la lista de clientes (completa o filtrada)
                     clientsList.map(client =>
                     {
-                        // Obtener "status" de cuota 
+                        // Obtener "status" de cuota
                         let status = 0;
                         const diff = parseInt(julianDay - client.nextPayDate);
 
@@ -198,7 +191,7 @@ export default function ClientsScreen()
 
                         return (
                             <Client
-                                key={client.id} 
+                                key={client.id}
                                 clientId={client.id}
                                 name={client.name}
                                 status={status}
@@ -208,7 +201,7 @@ export default function ClientsScreen()
                 }
                 </ScrollView>
             }
-            
+
             <TouchableOpacity style={styles.floatingBtn_container} onPress={() => navigation.navigate("Añadir cliente")} activeOpacity={0.75}>
                 <Ionicons name="person-add-sharp" style={styles.floatingBtn_icon}/>
             </TouchableOpacity>

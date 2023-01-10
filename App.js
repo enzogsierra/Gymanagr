@@ -1,91 +1,152 @@
-import React, { useEffect } from "react";
-import { View, StatusBar } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import React, { useEffect, useState } from "react";
+import { View, StatusBar, Text, TouchableOpacity, ToastAndroid } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Settings, settingsInfo } from "./settings";
+import { TextInput } from "react-native-gesture-handler";
 import { initDatabase } from "./dbConfig";
-import { colors } from "./utils";
-
+import { colors, styles } from "./utils";
 
 // Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import HomeScreen from "./screens/HomeScreen";
+import StatsScreen from "./screens/StatsScreen";
 import ClientsScreen from "./screens/ClientsScreen";
 import ClientsScreen_add from "./screens/ClientsScreen_add";
 import ClientsScreen_edit from "./screens/ClientsScreen_edit";
 import SettingsScreen from "./screens/SettingsScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { settingsInfo } from "./settings";
 
 
 export default function App() 
 {
     const Tabs = createBottomTabNavigator();
 
+    const [feePrice, setFeePrice] = useState(""); // Almacena el precio de la cuota que el usuario establezca (solo en firstlaunch)
+    const [render, setRender] = useState(false); // Establece si debe renderizarse la pantalla o no
+    const [firstLaunch, setFirstLaunch] = useState(false); // Establece si es la primera vez que se lanza la aplicación
+
+
+    // Cuando carga la aplicación
     useEffect(() =>
     {
-        initSettings();
+        // Iniciar la base de datos
         initDatabase();
+
+        // Verificamos si ya se han creado las configuraciones iniciales. Si no existen, mostramos la pantalla "first launch"
+        const checkSettings = async () =>
+        {
+            const value = await AsyncStorage.getItem(Settings.feePrice); // Obtenemos el precio de la cuota mensual
+            
+            setFirstLaunch((value === null)); // Si no existe el precio de cuota mensual, significa que es un "first launch"
+            setRender(true); // Ya se puede renderizar la pantalla
+        }
+        checkSettings();
     }, []);
 
 
-    // Crear configuraciones
-    const initSettings = () =>
+    // Cuando presiona en "Comenzar" (solo en pantalla "first launch")
+    function onLaunchApp()
     {
-        settingsInfo.forEach(async setting =>
+        if(!feePrice) return ToastAndroid.showWithGravity("Indique un precio válido", ToastAndroid.SHORT, ToastAndroid.SHORT);
+    
+        // Funcion para crear las configuraciones iniciales
+        const createDefaultSettings = async () =>
         {
-            const value = await AsyncStorage.getItem(setting.key) ?? null;
-            if(value === null) await AsyncStorage.setItem(setting.key, setting.value.toString());
-        });
+            // Iterar sobre todas las configuraciones y darles un valor por defecto
+            settingsInfo.forEach(async setting =>
+            {
+                await AsyncStorage.setItem(setting.key, setting.value.toString());
+            });
+
+            // Establecer precio de cuota
+            await AsyncStorage.setItem(Settings.feePrice, feePrice);
+        };
+        createDefaultSettings();
+
+        setFirstLaunch(false); // Ya se crearon las configuraciones iniciales. Se renderizará la pantalla normal
     }
 
+    
     return (
         <View style={{flex: 1}}>
             <StatusBar animated="true" translucent={true}/>
             
-            <NavigationContainer>
-                <Tabs.Navigator screenOptions={{tabBarActiveTintColor: colors.primary, tabBarHideOnKeyboard: 1}}>
-                    <Tabs.Screen
-                        name="ClientsTab"
-                        component={ClientsTab}
-                        options={{
-                            tabBarIcon: ({ color, size }) => (
-                                <FontAwesome5 name="address-card" size={size} color={color} />
-                            ),
-                            headerShown: false,
-                            tabBarShowLabel: false,
-                            tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
-                        }}
-                    />
+            {render &&
+                <NavigationContainer>
+                    {firstLaunch ?
+                        <View style={{flex: 1}}>
+                            <StatusBar animated="true" translucent={true}/>
+                
+                            <View style={styles.container}>
+                                <View style={styles.firstLaunch_container}>
+                                    <Text style={styles.firstLaunch_h1}>Bienvenido a <Text style={{color: colors.primary}}>Gymanagr</Text></Text>
+                                    <Text style={styles.firstLaunch_text}>Antes de comenzar, escriba la cuota mensual de su gimnasio. Puedes cambiar este precio en la sección de configuración.</Text>
+                
+                                    <View style={styles.firstLaunch_priceInputContainer}>
+                                        <Ionicons name="logo-usd" size={24} color={colors.primary}/>
+                                        
+                                        <TextInput
+                                            style={styles.firstLaunch_priceInput}
+                                            onChangeText={(value) => setFeePrice((parseInt(value) ? parseInt(value) : "").toString())}
+                                            value={feePrice}
+                                            keyboardType="numeric"
+                                            placeholder="0" 
+                                            placeholderTextColor="#888">
+                                        </TextInput>
+                                    </View>
+                
+                                    <TouchableOpacity style={styles.firstLaunch_startContainer} onPress={() => onLaunchApp()} activeOpacity={0.75}>
+                                        <Text style={styles.firstLaunch_startText}>Comenzar</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    :
+                        <Tabs.Navigator screenOptions={{tabBarActiveTintColor: colors.primary, tabBarHideOnKeyboard: 1}}>
+                            <Tabs.Screen
+                                name="ClientsTab"
+                                component={ClientsTab}
+                                options={{
+                                    tabBarIcon: ({ color, size }) => (
+                                        <FontAwesome5 name="address-card" size={size} color={color} />
+                                    ),
+                                    headerShown: false,
+                                    tabBarShowLabel: false,
+                                    tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
+                                }}
+                            />
 
-                    <Tabs.Screen
-                        name="HomeTab"
-                        component={HomeTab}
-                        options={{
-                            tabBarIcon: ({ color, size }) => (
-                                <FontAwesome5 name="chart-bar" size={size} color={color} />
-                            ),
-                            headerShown: false,
-                            tabBarShowLabel: false,
-                            tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
-                        }}
-                    />
+                            <Tabs.Screen
+                                name="StatsTab"
+                                component={StatsTab}
+                                options={{
+                                    tabBarIcon: ({ color, size }) => (
+                                        <FontAwesome5 name="chart-bar" size={size} color={color} />
+                                    ),
+                                    headerShown: false,
+                                    tabBarShowLabel: false,
+                                    tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
+                                }}
+                            />
 
-                    <Tabs.Screen
-                        name="SettingsTab"
-                        component={SettingsTab}
-                        options={{
-                            tabBarIcon: ({ color, size }) => (
-                                <FontAwesome5 name="cog" size={size} color={color} />
-                            ),
-                            headerShown: false,
-                            tabBarShowLabel: false,
-                            tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
-                        }}
-                    />
-                </Tabs.Navigator>
-            </NavigationContainer>
+                            <Tabs.Screen
+                                name="SettingsTab"
+                                component={SettingsTab}
+                                options={{
+                                    tabBarIcon: ({ color, size }) => (
+                                        <FontAwesome5 name="cog" size={size} color={color} />
+                                    ),
+                                    headerShown: false,
+                                    tabBarShowLabel: false,
+                                    tabBarStyle: {backgroundColor: colors.background, borderTopColor: "transparent"}
+                                }}
+                            />
+                        </Tabs.Navigator> 
+                    }
+                </NavigationContainer>
+            }
         </View>
     );
 }
@@ -135,7 +196,7 @@ function ClientsTab()
     );
 }
 
-function HomeTab()
+function StatsTab()
 {
     const Stack = createNativeStackNavigator();
 
@@ -143,7 +204,7 @@ function HomeTab()
         <Stack.Navigator>
             <Stack.Screen
                 name="Estadísticas"
-                component={HomeScreen}
+                component={StatsScreen}
                 options={
                 {
                     headerStyle: {backgroundColor: colors.background},
