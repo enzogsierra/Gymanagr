@@ -300,65 +300,6 @@ export const styles = StyleSheet.create(
         color: "#ccc",
     },
 
-    // Tarjeta de profesor
-    teacherCard_container:
-    {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-
-        marginBottom: 24,
-    },
-
-    teacherCard_iconWrapper:
-    {
-        justifyContent: "center",
-        alignItems: "center",
-        width: 52,
-        height: 52,
-        borderWidth: 1,
-        borderColor: "#555",
-        borderRadius: 52 / 2,
-    },  
-    teacherCard_icon:
-    {
-        color: "white",
-        fontSize: 24,
-    },
-
-    teacherCard_info:
-    {
-        flex: 1,
-        marginStart: 16,
-    },
-
-    teacherCard_name:
-    {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-    },
-
-    teacherCard_dataWrapper:
-    {
-        flexDirection: "row",
-    },
-    teacherCard_data:
-    {
-        marginEnd: 32,
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    teacherCard_dataIcon:
-    {
-        marginEnd: 8,
-        color: "#ccc"
-    },
-    teacherCard_dataText:
-    {
-        color: "#ccc",
-    },
-
     
     // Inicio
     home_card:

@@ -6,7 +6,7 @@ import {FontAwesome, Ionicons} from '@expo/vector-icons';
 import Client from "../components/Client"; 
 import {db} from "../dbConfig"; // Importar la db
 import ModalSelector from "react-native-modal-selector";
-import { styles } from "../utils";
+import { colors, styles } from "../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Settings } from "../settings";
 
@@ -67,10 +67,6 @@ export default function ClientsScreen()
             tx.executeSql(query, [], (_, res) => 
             {
                 setClients(res.rows._array); // Almacenar todos los clientes
-            },
-            (_, error) => 
-            {
-                ToastAndroid.showWithGravity(`${error}`, ToastAndroid.SHORT, ToastAndroid.CENTER);
             });
         });
 
@@ -175,31 +171,43 @@ export default function ClientsScreen()
                 <Text style={styles.searchBar_filterText}>{clientsList.length} {(clientsList.length == 1) ? ("cliente filtrado") : ("clientes filtrados")}</Text>
             }
             
+            {!clients.length ?
+                <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                    <Text style={{fontSize: 16, color: "white"}}>Añade clientes para empezar</Text>
 
-            <ScrollView style={{marginTop: 16}}>
-            {
-                // Mostrar la lista de clientes (completa o filtrada)
-                clientsList.map(client =>
+                    <TouchableOpacity onPress={() => navigation.navigate("Añadir cliente")} style={{marginTop: 8, padding: 8, backgroundColor: colors.primary, borderRadius: 8}}>
+                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                            <Ionicons name="person-add-sharp" style={{marginEnd: 4, fontSize: 16, color: "white"}}/>
+                            <Text style={{color: "white", fontSize: 16}}>Nuevo cliente</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            :
+                <ScrollView style={{marginTop: 16}}>
                 {
-                    // Obtener "status" de cuota 
-                    let status = 0;
-                    const diff = parseInt(julianDay - client.nextPayDate);
+                    // Mostrar la lista de clientes (completa o filtrada)
+                    clientsList.map(client =>
+                    {
+                        // Obtener "status" de cuota 
+                        let status = 0;
+                        const diff = parseInt(julianDay - client.nextPayDate);
 
-                    if(diff > inactiveAfterDays) status = 2; // servicio inactivo
-                    else if(diff > 0) status = 1; // servicio pendiente
-                    else if(diff <= 0) status = 0; // serivicio activo
+                        if(diff > inactiveAfterDays) status = 2; // servicio inactivo
+                        else if(diff > 0) status = 1; // servicio pendiente
+                        else if(diff <= 0) status = 0; // serivicio activo
 
-                    return (
-                        <Client
-                            key={client.id} 
-                            clientId={client.id}
-                            name={client.name}
-                            status={status}
-                        />
-                    );
-                })
+                        return (
+                            <Client
+                                key={client.id} 
+                                clientId={client.id}
+                                name={client.name}
+                                status={status}
+                            />
+                        );
+                    })
+                }
+                </ScrollView>
             }
-            </ScrollView>
             
             <TouchableOpacity style={styles.floatingBtn_container} onPress={() => navigation.navigate("Añadir cliente")} activeOpacity={0.75}>
                 <Ionicons name="person-add-sharp" style={styles.floatingBtn_icon}/>

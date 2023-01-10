@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Mi Gym",
-    "slug": "MiGym",
-    "version": "1.0",
+    "name": "Gymanagr",
+    "slug": "Gymanagr",
+    "version": "1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "ar.com.compustack.MiGym"
+      "package": "ar.com.compustack.Gymanagr"
     },
     "web": {
       "favicon": "./assets/favicon.png"

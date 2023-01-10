@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
-import { Alert, Linking, Modal, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Linking, Modal, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import {FontAwesome5} from '@expo/vector-icons'; 
 
 import {settingsInfo} from "../settings";
@@ -39,6 +39,11 @@ export default function SettingsScreen()
     // Cuando se presiona en el boton "Guardar" dentro de una configuracion
     function onSettingSave(setting)
     {
+        if(!setting.value)
+        {
+            return ToastAndroid.showWithGravity("Este campo es requerido", ToastAndroid.SHORT, ToastAndroid.CENTER);
+        }
+
         saveSetting(setting.key, setting.value);
         setShowModal(false);
         ToastAndroid.showWithGravity("Configuración guardada", ToastAndroid.SHORT, ToastAndroid.BOTTOM)
@@ -51,7 +56,7 @@ export default function SettingsScreen()
         const info = [];
         for(const setting of settingsInfo) 
         {
-            setting.value = await AsyncStorage.getItem(setting.key) ?? setting.value;
+            setting.value = await AsyncStorage.getItem(setting.key);
             info.push(setting);
         }
 

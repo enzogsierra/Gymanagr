@@ -15,6 +15,8 @@ import ClientsScreen from "./screens/ClientsScreen";
 import ClientsScreen_add from "./screens/ClientsScreen_add";
 import ClientsScreen_edit from "./screens/ClientsScreen_edit";
 import SettingsScreen from "./screens/SettingsScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { settingsInfo } from "./settings";
 
 
 export default function App() 
@@ -23,9 +25,20 @@ export default function App()
 
     useEffect(() =>
     {
+        initSettings();
         initDatabase();
-    });
+    }, []);
 
+
+    // Crear configuraciones
+    const initSettings = () =>
+    {
+        settingsInfo.forEach(async setting =>
+        {
+            const value = await AsyncStorage.getItem(setting.key) ?? null;
+            if(value === null) await AsyncStorage.setItem(setting.key, setting.value.toString());
+        });
+    }
 
     return (
         <View style={{flex: 1}}>

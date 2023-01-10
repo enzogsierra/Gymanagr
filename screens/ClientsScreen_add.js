@@ -100,7 +100,7 @@ export default function ClientsScreen_add()
                 tx.executeSql(payQuery, [qPayment, sqliteDate, clientId], (_, res) => 
                 {
                     navigation.goBack();
-                    ToastAndroid.showWithGravity("Cliente añadido correctamente", ToastAndroid.SHORT, ToastAndroid.CENTER);
+                    ToastAndroid.showWithGravity("Cliente añadido", ToastAndroid.SHORT, ToastAndroid.CENTER);
                 }, 
                 (error, _) => 
                 {
