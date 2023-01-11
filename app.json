@@ -2,7 +2,7 @@
   "expo": {
     "name": "Gymanagr",
     "slug": "Gymanagr",
-    "version": "1.2",
+    "version": "1.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -31,7 +31,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "039653c7-c8d8-4a30-a457-45b18a11882e"
+        "projectId": "fb9c3873-f12f-4163-947c-39b43a66fde9"
       }
     }
   }

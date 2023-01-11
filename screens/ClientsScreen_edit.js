@@ -3,7 +3,6 @@ import {View, Text, TextInput, Pressable, ToastAndroid, Modal, Alert, TouchableO
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { db } from "../dbConfig";
-import ModalSelector from "react-native-modal-selector";
 import { ScrollView } from "react-native-gesture-handler";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { styles } from "../utils";
@@ -53,10 +52,8 @@ export default function ClientsScreen_edit({route})
             {
                 const data = res.rows._array[0];
                 setClient(data);
-            }, 
-            (_, error) => { console.log(error); });
+            });
         });
-
 
         //
         setShowCalendar(false);

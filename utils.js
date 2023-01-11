@@ -32,6 +32,7 @@ export const styles = StyleSheet.create(
     },
     firstLaunch_h1:
     {
+        marginBottom: 16,
         fontSize: 24,
         fontWeight: "bold",
         color: "white",
@@ -42,11 +43,12 @@ export const styles = StyleSheet.create(
         textAlign: "center",
         color: "white",
     },
+
     firstLaunch_priceInputContainer:
     {
         marginTop: 16,
         paddingVertical: 8,
-        paddingHorizontal: 16,
+        paddingHorizontal: 8,
         flexDirection: "row",
         alignItems: "center",
         borderWidth: 1,
@@ -58,6 +60,12 @@ export const styles = StyleSheet.create(
         paddingBottom: 1,
         fontSize: 24,
         color: "white",
+    },
+    firstLaunch_priceInputIcon:
+    {
+        marginEnd: 4,
+        fontSize: 24,
+        color: colors.primary,
     },
     firstLaunch_startContainer:
     {

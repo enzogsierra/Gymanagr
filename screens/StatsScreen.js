@@ -112,7 +112,7 @@ export default function StatsScreen()
             tx.executeSql(query, [], (_, res) => 
             {
                 setPayments(res.rows._array);
-            }, (_, error) => { console.log(error); });
+            });
         });
     }, [filters]);
 
